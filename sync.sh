@@ -19,7 +19,7 @@ helpFunction()
 while getopts "d:r:c" opt
 do
    case "$opt" in
-      d ) PAT_TO_SYNC="$OPTARG" ;;
+      d ) PATH_TO_SYNC="$OPTARG" ;;
       r ) REMOTE="$OPTARG" ;;
       c ) config=1 ;;
       ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
@@ -37,7 +37,7 @@ then
 fi
 
 # Print helpFunction in case parameters are empty
-if [ -z "$PAT_TO_SYNC" ] || [ -z "$REMOTE" ]
+if [ -z "$PATH_TO_SYNC" ] || [ -z "$REMOTE" ]
 then
   helpFunction
 fi
@@ -50,5 +50,5 @@ fi
 docker run --rm \
     --interactive --tty \
     -v ${SCRIPTPATH}:/config/rclone/ \
-    -v ${SCRIPTPATH}/${PAT_TO_SYNC}:/sync \
+    -v $(realpath ${PATH_TO_SYNC}):/sync \
     rclone/rclone sync /sync ${REMOTE}:current --backup-dir=${REMOTE}:$(date +%Y%m%d_%H%M%S)
